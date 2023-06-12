@@ -14,7 +14,7 @@ var urls = []string{
 }
 
 func fetchUrl(url string, wg *sync.WaitGroup){
-	defer wg.Done()
+	defer wg.Done() //decrement counter
     resp, err := http.Get(url)
     if err!= nil {
         fmt.Println(err)
