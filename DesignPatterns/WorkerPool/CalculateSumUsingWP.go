@@ -75,6 +75,19 @@ func allocate(noOfJobs int, jobs chan Job){
 	close(jobs)
 }
 
+func allocateParallel(noOfJobs int) chan Job {
+	jobs := make(chan Job, 10)
+	go func(){
+		defer close(jobs)
+        for i := 0; i < noOfJobs; i++ {
+            randomno := rand.Intn(999) + 1
+            job := Job{i, randomno}
+            jobs <- job
+        }
+	}()
+	return jobs
+}
+
 func main() {
 	jobs := make(chan Job, 10)
 	results := make(chan Result, 10)
