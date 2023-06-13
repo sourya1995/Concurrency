@@ -45,6 +45,27 @@ func createWorkerPool(noOfWorkers int, jobs chan Job, results chan Result) {
 	close(results)
 }
 
+func createParallelWorkers(noOfWorkers int, jobs chan Job) chan Result{
+	var wg sync.WaitGroup
+	results := make(chan Result, 10)
+	go func(){
+		defer close(results)
+		defer wg.Wait()
+		for i := 0; i < noOfWorkers; i++ {
+			wg.Add(1)
+						go func(i int) {
+							defer wg.Done()
+							for job := range jobs {
+								output := Result{job, digits(job.randomno), i} //create new struct
+								results <- output
+							}
+						}(i)
+					}
+				}()
+				return results
+	}
+
+
 func allocate(noOfJobs int, jobs chan Job){
 	for i := 0; i < noOfJobs; i++ {
 		randomno := rand.Intn(999) + 1
