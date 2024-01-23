@@ -2,6 +2,8 @@ package main
 
 import (
 	"os"
+	"MoviesAPI/database"
+	"MoviesAPI/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +16,7 @@ func main(){
 
 	database.StartDB()
 	router.Use(gin.Logger())
+	routes.AuthRoutes(router)
 
 	router.GET("/api", func(c *gin.Context){
 		c.JSON(200, gin.H{
